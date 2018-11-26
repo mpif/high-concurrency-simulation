@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+<!-- 定义日志文件 输入位置 -->
+	<property name="log_dir" value="/letv/Logs/concurrency" />
+	<!-- 控制台输出 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+	<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+			<pattern>%d %-5p %c{2} - [%m]%n</pattern>
+		</encoder>
+	</appender>
+	<!-- 按照每天生成日志文件 -->
+	<appender name="DEFAULT-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件输出的文件名-->
+			<FileNamePattern>${log_dir}/default/default.log.%d{yyyyMMdd}</FileNamePattern>
+			<!-- 日志生成30天有效 -->
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<encoder charset="UTF-8">
+			<pattern>%d %-5p %c{2} - [%m]%n</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- ERROR级别日志 -->
+	<!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 RollingFileAppender -->
+	<appender name="ERROR-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 过滤器，只记录WARN级别的日志 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<!-- 最常用的滚动策略，它根据时间来制定滚动策略.既负责滚动也负责出发滚动 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志输出位置  -->
+			<fileNamePattern>${log_dir}/error/error.log.%d{yyyyMMdd}</fileNamePattern>
+			<!-- 保留 30天数据-->
+ 			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<encoder charset="UTF-8">
+			<pattern>%d %-5p %c{2} - [%m]%n</pattern>
+		</encoder>
+	</appender>
+
+	<!--
+	<logger name="com.le.jr.cash.user" additivity="false">
+		<level value="INFO"/>
+		<appender-ref ref="ERROR-APPENDER"/>
+	</logger>
+	-->
+
+	<!-- 日志输出级别 -->
+	<root level="DEBUG">
+		<appender-ref ref="DEFAULT-APPENDER" />
+		<appender-ref ref="ERROR-APPENDER" />
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
