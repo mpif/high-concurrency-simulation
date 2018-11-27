@@ -26,6 +26,9 @@ public class ClientJavaMain {
 
     public void startup() {
 
+        ExecutorService executorService = null;
+        HttpAsynClientRequest httpAsynClientRequest = null;
+
         try {
             /**
              * 创建固定容量大小的缓冲池
@@ -34,7 +37,7 @@ public class ClientJavaMain {
 //        int maxTaskCount = Integer.MAX_VALUE;
             int maxTaskCount = 10;
 
-            int corePoolSize = Runtime.getRuntime().availableProcessors() * 2;
+            int corePoolSize = Runtime.getRuntime().availableProcessors();
             int maximumPoolSize = 100;
             long keepAliveTime = 5L;
             TimeUnit timeUnit = TimeUnit.SECONDS;
@@ -44,7 +47,9 @@ public class ClientJavaMain {
                 @Override
                 public Thread newThread(Runnable r) {
                     String threadName = "clientThread_" + index.getAndIncrement();
-                    return new Thread(threadName);
+                    //之前new线程Thread的时候没传Runnable对象r, 如下面这条语句所示, 导致任务提交线程池后不执行
+//                    return new Thread(threadName);
+                    return new Thread(r, threadName);
                 }
             };
             RejectedExecutionHandler rejectedExecutionHandler = new RejectedExecutionHandler() {
@@ -54,7 +59,7 @@ public class ClientJavaMain {
                 }
             };
 
-            ThreadPoolExecutor executorService = new ThreadPoolExecutor(
+            executorService = new ThreadPoolExecutor(
                 corePoolSize,
                 maximumPoolSize,
                 keepAliveTime,
@@ -64,7 +69,7 @@ public class ClientJavaMain {
                 rejectedExecutionHandler
             );
 
-            HttpAsynClientRequest httpAsynClientRequest = new HttpAsynClientRequest();
+            httpAsynClientRequest = new HttpAsynClientRequest();
 
             List<Future> futureList = new ArrayList<Future>();
 
@@ -72,7 +77,7 @@ public class ClientJavaMain {
             while(start) {
                 runningTaskCount++;
                 System.out.println("task No." + runningTaskCount);
-    //            executorService.submit(new ServerTask(httpAsynClientRequest));
+//                executorService.execute(new ServerTask(httpAsynClientRequest));
                 Future future = executorService.submit(new ServerTask(httpAsynClientRequest));
                 futureList.add(future);
 
@@ -85,18 +90,19 @@ public class ClientJavaMain {
 
             for(int i = 0; i < futureList.size(); i ++) {
                 Future future = futureList.get(i);
-                System.out.println(future.get());
+                System.out.println("future.get():" + future.get());
             }
 
+//            Thread.sleep( 3 * 1000);
 
 
 
 
-
-        } catch (InterruptedException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+        } finally {
+            executorService.shutdown();
+            httpAsynClientRequest.close();
         }
 
 

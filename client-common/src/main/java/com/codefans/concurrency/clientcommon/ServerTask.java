@@ -10,8 +10,8 @@ public class ServerTask implements Runnable {
 
     private HttpAsynClientRequest httpAsynClientRequest;
 
-    public ServerTask(HttpAsynClientRequest httpRequest) {
-        this.httpAsynClientRequest = httpRequest;
+    public ServerTask(HttpAsynClientRequest httpAsynClientRequest) {
+        this.httpAsynClientRequest = httpAsynClientRequest;
     }
 
     @Override
