@@ -1,6 +1,8 @@
 package com.codefans.concurrency.clientcommon;
 
+import com.codefans.concurrency.clientcommon.constant.CommonContants;
 import com.codefans.concurrency.clientcommon.util.NumberUtils;
+import com.codefans.concurrency.clientcommon.util.PropertyUtils;
 
 import java.util.Date;
 
@@ -29,7 +31,8 @@ public class ContinuousRequestTask implements Runnable {
 
             if(taskRunning) {
 //                System.out.println("server task running, time:" + new Date());
-                String uri = "http://localhost:8083/template/callback/version/appkey?xmlParam=fdfjdlfd333444";
+//                String uri = "http://localhost:8083/template/callback/version/appkey?xmlParam=fdfjdlfd333444";
+                String uri = PropertyUtils.getProperty(CommonContants.REQUEST_URL_KEY);
                 httpAsynClientRequest.get(uri);
             } else {
                 try {
