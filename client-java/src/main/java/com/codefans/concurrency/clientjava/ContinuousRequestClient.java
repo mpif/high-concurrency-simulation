@@ -1,8 +1,11 @@
 package com.codefans.concurrency.clientjava;
 
+import com.codefans.concurrency.clientcommon.ContinuousRequestTask;
 import com.codefans.concurrency.clientcommon.HttpAsynClientRequest;
 
+import java.io.*;
 import java.util.Date;
+import java.util.Scanner;
 
 /**
  * @author: ShengzhiCai
@@ -10,7 +13,11 @@ import java.util.Date;
  */
 public class ContinuousRequestClient {
 
-    private boolean running = true;
+    private static final String START = "start";
+    private static final String STOP = "stop";
+    private static final String SHUTDOWN = "shutdown";
+
+    private boolean running;
 
     public static void main(String[] args) {
         ContinuousRequestClient requestClient = new ContinuousRequestClient();
@@ -19,15 +26,43 @@ public class ContinuousRequestClient {
 
     public void startup() {
 
-        HttpAsynClientRequest httpAsynClientRequest = new HttpAsynClientRequest();
+        Scanner sc = null;
 
-        while(running) {
+        try {
 
-            System.out.println("server task running, time:" + new Date());
-            String uri = "http://localhost:8083/template/callback/version/appkey?xmlParam=fdfjdlfd333444";
-            httpAsynClientRequest.get(uri);
+            System.out.println("waiting command: start|stop");
 
+            running = true;
+            String command = "";
+
+            while (running) {
+
+                sc = new Scanner(System.in);
+                if(sc.hasNextLine()) {
+                    command = sc.nextLine();
+                    if (START.equalsIgnoreCase(command)) {
+                        new Thread(new ContinuousRequestTask()).start();
+                    } else if (STOP.equalsIgnoreCase(command)) {
+                        ContinuousRequestTask.stopTask();
+                    } else if (SHUTDOWN.equalsIgnoreCase(command)) {
+                        running = false;
+                        ContinuousRequestTask.shutdown();
+                    } else {
+                        System.out.println("unkown command:" + command);
+                    }
+                }
+
+            }
+
+            System.out.println("end!");
+            System.exit(0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(sc);
         }
+
 
     }
 
@@ -39,9 +74,33 @@ public class ContinuousRequestClient {
         this.running = running;
     }
 
+    public void close(InputStream is) {
+        try {
+            if(is != null) {
+                is.close();
+                is = null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void close(BufferedReader reader) {
+        try {
+            if(reader != null) {
+                reader.close();
+                reader = null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-
-
+    public void close(Scanner sc) {
+        if(sc != null) {
+            sc.close();
+            sc = null;
+        }
+    }
 
 }

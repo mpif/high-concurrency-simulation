@@ -26,7 +26,8 @@ public class CyclicBarrierRunnable implements Callable<Boolean> {
 
         try {
 
-            cyclicBarrier.await(3000, TimeUnit.MILLISECONDS);
+//            cyclicBarrier.await(3000, TimeUnit.MILLISECONDS);
+            cyclicBarrier.await();
 
             System.out.println("CyclicBarrierRunnable task running, time:" + new Date());
 //        String uri = "http://localhost:8083/template/callback/version/appkey?xmlParam=fdfjdlfd333444";

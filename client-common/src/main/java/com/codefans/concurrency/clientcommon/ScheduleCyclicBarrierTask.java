@@ -5,26 +5,24 @@ import com.codefans.concurrency.clientcommon.util.ThreadPoolUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 /**
  * @author: ShengzhiCai
- * @date: 2018-11-26 17:40
+ * @date: 2018-11-28 10:46
  */
-public class CyclicBarrierTask {
+public class ScheduleCyclicBarrierTask implements Runnable {
 
-    private int barrierNum;
-    private boolean running = true;
+    int barrierNum;
 
-    public CyclicBarrierTask() {
+    @Override
+    public void run() {
 
-    }
+        int availableProcessors = Runtime.getRuntime().availableProcessors();
+        barrierNum = availableProcessors;
 
-    public void startup() {
-
-        barrierNum = Runtime.getRuntime().availableProcessors();
         CyclicBarrier cyclicBarrier = new CyclicBarrier(barrierNum);
 
         ExecutorService executorService = ThreadPoolUtils.getExecutorService("CyclicBarrierTask");
@@ -36,7 +34,10 @@ public class CyclicBarrierTask {
         int runningTaskCount = 0;
         Future<Boolean> resultFuture = null;
 
-        while(running) {
+        int threadNums = barrierNum * 10;
+
+        for(int j = 1; j <= threadNums; j ++) {
+
             runningTaskCount++;
             resultFuture = executorService.submit(new CyclicBarrierRunnable(httpAsynClientRequest, cyclicBarrier));
             futureList.add(resultFuture);
@@ -59,13 +60,8 @@ public class CyclicBarrierTask {
                         runningTaskCount = 0;
                     }
 
-                    int randomInt = NumberUtils.getRandomSleepMillTimes();
-                    System.out.println("sleep:" + randomInt);
-                    Thread.sleep(randomInt);
 
-//                    running = false;
-
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -73,22 +69,7 @@ public class CyclicBarrierTask {
 
         }
 
-
     }
 
-    public int getBarrierNum() {
-        return barrierNum;
-    }
 
-    public void setBarrierNum(int barrierNum) {
-        this.barrierNum = barrierNum;
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
-
-    public void setRunning(boolean running) {
-        this.running = running;
-    }
 }
