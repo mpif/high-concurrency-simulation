@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- 数据源 -->
+	<bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<property name="url" value="${jdbc.datasource.url}" />
+		<property name="username" value="${jdbc.datasource.username}" />
+		<property name="password" value="${jdbc.datasource.password}" />
+		<property name="initialSize" value="${jdbc.datasource.initialSize}" />
+		<property name="maxActive" value="${jdbc.datasource.maxActive}" />
+		<property name="minIdle" value="${jdbc.datasource.minIdle}" />
+		<property name="maxWait" value="${jdbc.datasource.maxWait}" />
+		<property name="poolPreparedStatements" value="${jdbc.datasource.poolPreparedStatements}" />
+		<property name="maxOpenPreparedStatements" value="${jdbc.datasource.maxOpenPreparedStatements}" />
+		<property name="validationQuery" value="SELECT 'x'" />
+		<property name="testOnBorrow" value="${jdbc.datasource.testOnBorrow}" />
+		<property name="testOnReturn" value="${jdbc.datasource.testOnReturn}" />
+		<property name="testWhileIdle" value="${jdbc.datasource.testWhileIdle}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${jdbc.datasource.timeBetweenEvictionRunsMillis}" />
+		<property name="minEvictableIdleTimeMillis" value="${jdbc.datasource.minEvictableIdleTimeMillis}" />
+		<property name="proxyFilters">
+			<list>
+				<ref bean="logFilter" />
+				<ref bean="statFilter" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="logFilter" class="com.alibaba.druid.filter.logging.Slf4jLogFilter">
+		<property name="dataSourceLogEnabled" value="false" />
+		<property name="connectionLogEnabled" value="false" />
+		<property name="statementLogEnabled" value="false" />
+		<property name="resultSetLogEnabled" value="false" />
+	</bean>
+
+	<bean id="statFilter" class="com.alibaba.druid.filter.stat.StatFilter">
+		<property name="slowSqlMillis" value="3000" />
+		<property name="logSlowSql" value="true" />
+	</bean>
+
+	<!-- 集成Mybatis -->
+	<bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="druidDataSource" />
+		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+		<property name="mapperLocations"  value="classpath:mybatis/mapper/*.xml"/>
+	</bean>
+
+	<!-- 扫描 mappers 自动为DAO层生成bean -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sessionFactory" />
+		<property name="basePackage" value="com.lejr.credit.configcenter.dao" />
+	</bean>
+
+	<!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+	<!-- 事务管理器配置-->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="druidDataSource"/>
+	</bean>
+
+</beans>

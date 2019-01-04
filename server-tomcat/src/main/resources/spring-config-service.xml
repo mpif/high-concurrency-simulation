@@ -11,7 +11,10 @@
 			http://www.springframework.org/schema/tx/spring-tx.xsd"
        default-autowire="byName">
 	
-	<!-- 启用对事务的注解支持 -->
+	<!-- 启用对事务的注解支持
 	<tx:annotation-driven transaction-manager="transactionManager" />
-	
+	 -->
+
+
+
 </beans>

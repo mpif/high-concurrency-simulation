@@ -34,7 +34,7 @@ public class WebContextFilter implements Filter {
                 String[] values = entry.getValue();
                 if (values != null && values.length > 0) {
                     for (String value : values) {
-                        LOGGER.info("name:" + name + ",value:" + value);
+//                        LOGGER.info("name:" + name + ",value:" + value);
                         if (isXSS(value)) {
                             response.setContentType("application/json; charset=utf-8");
                             Map<String, Object> map = new HashMap<>();

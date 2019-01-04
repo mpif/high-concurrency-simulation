@@ -16,15 +16,15 @@ import java.util.Map;
 
 /**
  * @author: codefans
- * @date: 2018-11-23 15:55
+ * @date: 2019-01-04 17:31:43
  */
 @Controller
-@RequestMapping("template")
-public class TestController {
+@RequestMapping("user")
+public class UserController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    @RequestMapping(method= {RequestMethod.GET,RequestMethod.POST}, value="/callback/{version}/{appkey}")
+    @RequestMapping(method= {RequestMethod.GET,RequestMethod.POST}, value="/updateAmount/{version}/{appkey}")
     @ResponseBody
     public Message<String> callback(
             @PathVariable(value = "version") String version,
@@ -56,4 +56,3 @@ public class TestController {
     }
 
 }
-

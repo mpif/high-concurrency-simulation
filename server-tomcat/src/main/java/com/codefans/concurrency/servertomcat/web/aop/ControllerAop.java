@@ -18,7 +18,7 @@ public class ControllerAop implements MethodBeforeAdvice {
     
     @Override
     public void before(Method method, Object[] args, Object target) throws Throwable {
-        LOGGER.info("AOP方法前执行：target:" + target + ",method:" + method.getName());
+//        LOGGER.info("AOP方法前执行：target:" + target + ",method:" + method.getName());
         HttpServletResponse response = WebContext.getInstance().getResponse();
         //允许跨域访问
         response.setHeader("Access-Control-Allow-Origin", "*");
