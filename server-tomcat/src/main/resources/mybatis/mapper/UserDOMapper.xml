@@ -72,10 +72,18 @@
   </select>
 
 
-  <update id="updateAmount" parameterType="UserDO">
+  <update id="minusAmount" parameterType="UserDO">
       UPDATE
           user
-      SET amount = ${amount}
+      SET amount = amount - ${amount}
+      WHERE id=${id}
+      AND amount >= 0
+  </update>
+
+  <update id="addAmount" parameterType="UserDO">
+      UPDATE
+          user
+      SET amount = amount + ${amount}
       WHERE id=${id}
   </update>
 

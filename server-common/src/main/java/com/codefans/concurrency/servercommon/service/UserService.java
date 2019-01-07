@@ -16,10 +16,18 @@ public interface UserService {
     public UserDO queryUser(Long id);
 
     /**
-     * 更新金额
+     * 减少金额
      * @param userDO
      * @return
      */
-    public int updateAmount(UserDO userDO);
+    public int minusAmount(UserDO userDO);
+
+    /**
+     * 增加金额
+     * @param userDO
+     * @return
+     */
+    public int addAmount(UserDO userDO);
+
 
 }

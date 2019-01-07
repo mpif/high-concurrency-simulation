@@ -27,7 +27,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int updateAmount(UserDO userDO) {
-        return userDOMapper.updateAmount(userDO);
+    public int minusAmount(UserDO userDO) {
+        return userDOMapper.minusAmount(userDO);
+    }
+
+    @Override
+    public int addAmount(UserDO userDO) {
+        return userDOMapper.addAmount(userDO);
     }
 }

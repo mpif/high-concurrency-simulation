@@ -27,10 +27,17 @@ public interface UserDOMapper {
     UserDO queryUser(Long id);
 
     /**
-     * 更新金额
+     * 减少金额
      * @param userDO
      * @return
      */
-    int updateAmount(UserDO userDO);
+    int minusAmount(UserDO userDO);
+
+    /**
+     * 增加金额
+     * @param userDO
+     * @return
+     */
+    int addAmount(UserDO userDO);
 
 }
