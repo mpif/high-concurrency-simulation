@@ -55,7 +55,7 @@
 	<!-- 扫描 mappers 自动为DAO层生成bean -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="sqlSessionFactoryBeanName" value="sessionFactory" />
-		<property name="basePackage" value="com.lejr.credit.configcenter.dao" />
+		<property name="basePackage" value="com.codefans.concurrency.servercommon.dao" />
 	</bean>
 
 	<!-- 使用annotation定义事务 -->

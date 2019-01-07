@@ -12,8 +12,8 @@
        		http://www.springframework.org/schema/mvc/spring-mvc.xsd"
 	default-autowire="byName">
 
-	<!-- <mvc:annotation-driven /> -->
-	<context:component-scan base-package="com.codefans.concurrency.servertomcat" />
+	 <mvc:annotation-driven />
+	<context:component-scan base-package="com.codefans.concurrency" />
 	<aop:aspectj-autoproxy />
 
 	<bean id="propertyConfigurer"
@@ -27,12 +27,12 @@
 		</property>
 	</bean>
 	
-	<import resource="classpath:conf/${env}/spring-config-*.xml"/>
+	<import resource="classpath:spring-config-*.xml"/>
 
 	<!-- AOP for controllers -->
 	<aop:config>
 		<aop:advisor
-			pointcut="execution(* com.codefans.concurrency.servertomcat.web.controller.TestController.*(..))"
+			pointcut="execution(* com.codefans.concurrency.servertomcat.web.controller.*.*(..))"
 			advice-ref="controllerAop" />
 	</aop:config>
 
