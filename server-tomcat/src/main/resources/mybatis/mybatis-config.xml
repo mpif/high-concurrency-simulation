@@ -23,9 +23,10 @@
 	<typeAliases>
 
 		<!-- 实体类 -->
-		<!-- 用户类 -->
+		<!-- 用户类
 		<typeAlias alias="UserDO" type="com.codefans.concurrency.servercommon.domain.UserDO" />
-
+		-->
+		<package name="com.codefans.concurrency.servercommon.domain" />
 
 	</typeAliases>
 
