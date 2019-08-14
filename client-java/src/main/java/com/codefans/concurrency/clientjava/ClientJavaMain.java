@@ -2,6 +2,8 @@ package com.codefans.concurrency.clientjava;
 
 import com.codefans.concurrency.clientcommon.HttpAsynClientRequest;
 import com.codefans.concurrency.clientcommon.ServerTask;
+import com.codefans.concurrency.clientcommon.constant.CommonContants;
+import com.codefans.concurrency.clientcommon.util.PropertyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,7 @@ public class ClientJavaMain {
              */
 
 //        int maxTaskCount = Integer.MAX_VALUE;
-            int maxTaskCount = 10;
+            int maxTaskCount = 10000000;
 
             int corePoolSize = Runtime.getRuntime().availableProcessors();
             int maximumPoolSize = 100;
@@ -70,28 +72,40 @@ public class ClientJavaMain {
             );
 
             httpAsynClientRequest = new HttpAsynClientRequest();
+            String uri = PropertyUtils.getProperty(CommonContants.REQUEST_URL_KEY);
 
-            List<Future> futureList = new ArrayList<Future>();
+
+
+//            List<Future> futureList = new ArrayList<Future>();
 
             int runningTaskCount = 0;
             while(start) {
                 runningTaskCount++;
                 System.out.println("task No." + runningTaskCount);
+//                System.out.println("task No." + runningTaskCount + ", queueSize=" + workQueue.size());
 //                executorService.execute(new ServerTask(httpAsynClientRequest));
-                Future future = executorService.submit(new ServerTask(httpAsynClientRequest));
-                futureList.add(future);
+//                Future future = executorService.submit(new ServerTask(httpAsynClientRequest));
+//                Future future = executorService.submit(new ServerTask(runningTaskCount));
+//                futureList.add(future);
+
+                httpAsynClientRequest.get(uri);
 
                 if(runningTaskCount == maxTaskCount) {
                     start = false;
                     System.out.println("stop ......");
                 }
 
+//                if(runningTaskCount % 500000 == 0) {
+//                    System.out.println("runningTaskCount=" + runningTaskCount + ", sleep 5s.");
+//                    Thread.sleep(5 * 1000);
+//                }
+
             }
 
-            for(int i = 0; i < futureList.size(); i ++) {
-                Future future = futureList.get(i);
-                System.out.println("future.get():" + future.get());
-            }
+//            for(int i = 0; i < futureList.size(); i ++) {
+//                Future future = futureList.get(i);
+//                System.out.println("future.get():" + future.get());
+//            }
 
 //            Thread.sleep( 3 * 1000);
 

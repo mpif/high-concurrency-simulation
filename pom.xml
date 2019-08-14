@@ -87,6 +87,12 @@
                 <artifactId>httpasyncclient</artifactId>
                 <version>4.1.4</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/commons-httpclient/commons-httpclient -->
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>3.1</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
