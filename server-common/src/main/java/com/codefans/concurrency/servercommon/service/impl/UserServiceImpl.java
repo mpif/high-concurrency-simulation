@@ -18,6 +18,14 @@ public class UserServiceImpl implements UserService {
 
     private static Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    private volatile static long addStartTime;
+    private volatile static long minusStartTime;
+
+    private static int totalAddRequests = 0;
+    private static int totalMinusRequests = 0;
+    private static int successAddRequests = 0;
+    private static int successMinusRequests = 0;
+
     @Resource
     private UserDOMapper userDOMapper;
 
@@ -28,11 +36,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int minusAmount(UserDO userDO) {
-        return userDOMapper.minusAmount(userDO);
+
+        if(minusStartTime == 0) {
+            minusStartTime = System.currentTimeMillis();
+        }
+
+        totalMinusRequests++;
+        int updateCount = userDOMapper.minusAmount(userDO);
+        if(updateCount == 1) {
+            successMinusRequests++;
+        }
+        log.info("totalMinusRequests=[" + totalMinusRequests + "], successMinusRequests=[" + successMinusRequests + "], total cost=[" + (System.currentTimeMillis() - minusStartTime)/1000 + "s]");
+        return updateCount;
     }
 
     @Override
     public int addAmount(UserDO userDO) {
-        return userDOMapper.addAmount(userDO);
+
+        if(addStartTime == 0) {
+            addStartTime = System.currentTimeMillis();
+        }
+
+        totalAddRequests++;
+        int updateCount = userDOMapper.addAmount(userDO);
+        if(updateCount == 1) {
+            successAddRequests++;
+        }
+        log.info("totalAddRequests=[" + totalAddRequests + "], successAddRequests=[" + successAddRequests + "], total cost=[" + (System.currentTimeMillis() - addStartTime)/1000 + "s]");
+        return updateCount;
     }
 }

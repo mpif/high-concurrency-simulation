@@ -38,6 +38,15 @@
 		<filter-name>webContextFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+	<filter>
+		<filter-name>monitorFilter</filter-name>
+		<filter-class>com.codefans.concurrency.servertomcat.web.filter.PerformanceMonitorFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>monitorFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>

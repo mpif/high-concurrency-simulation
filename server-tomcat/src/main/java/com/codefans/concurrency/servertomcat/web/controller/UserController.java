@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,11 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    private static int totalAddRequests = 0;
+    private static int totalMinusRequests = 0;
+    private static int successAddRequests = 0;
+    private static int successMinusRequests = 0;
+
     @RequestMapping(method= {RequestMethod.GET,RequestMethod.POST}, value="/addAmount/{version}/{appkey}/{id}/{amount}")
     @ResponseBody
     public Message<String> addAmount(
@@ -37,7 +43,8 @@ public class UserController {
             @PathVariable(value = "appkey") String appkey,
             @PathVariable(value = "id") Long id,
             @PathVariable(value = "amount") Long amount,
-            @RequestParam(value = "xmlParam") String xmlParam) {
+            @RequestParam(value = "xmlParam") String xmlParam,
+            HttpServletRequest request) {
 
         Message<String> message = null;
         try {
@@ -64,8 +71,12 @@ public class UserController {
             UserDO userDO = new UserDO();
             userDO.setId(id);
             userDO.setAmount(amount);
+            totalAddRequests++;
             int updateCount = userService.addAmount(userDO);
-            LOGGER.info("updateCount:{}", updateCount);
+            if(updateCount == 1) {
+                successAddRequests++;
+            }
+            LOGGER.info("updateCount:{}, totalAddRequests:{}, successAddRequests:{}", updateCount, totalAddRequests, successAddRequests);
 
             message = Messages.success(JSON.toJSONString(dataMap));
 
@@ -83,7 +94,8 @@ public class UserController {
             @PathVariable(value = "appkey") String appkey,
             @PathVariable(value = "id") Long id,
             @PathVariable(value = "amount") Long amount,
-            @RequestParam(value = "xmlParam") String xmlParam) {
+            @RequestParam(value = "xmlParam") String xmlParam,
+            HttpServletRequest request) {
 
         Message<String> message = null;
         try {
@@ -99,6 +111,8 @@ public class UserController {
                 return Messages.failed(Code.PARAMPARSEEXCEPTION.getValue(), "金额必须大于0");
             }
 
+            String remoteAddr = request.getRemoteAddr();
+
             LOGGER.info("callback params:[version={}, appkey={}, xmlParam={}, id={}, amount={}]", version, appkey, xmlParam, id, amount);
 
             Map<String, String> dataMap = new HashMap<String, String>();
@@ -110,8 +124,12 @@ public class UserController {
             UserDO userDO = new UserDO();
             userDO.setId(id);
             userDO.setAmount(amount);
+            totalMinusRequests++;
             int updateCount = userService.minusAmount(userDO);
-            LOGGER.info("updateCount:{}", updateCount);
+            if(updateCount == 1) {
+                successMinusRequests++;
+            }
+            LOGGER.info("updateCount:{}, totalMinusRequests:{}, successMinusRequests:{}", updateCount, totalMinusRequests, successMinusRequests);
 
             message = Messages.success(JSON.toJSONString(dataMap));
 

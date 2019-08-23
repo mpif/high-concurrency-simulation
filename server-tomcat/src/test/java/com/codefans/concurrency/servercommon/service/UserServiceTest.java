@@ -22,6 +22,18 @@ public class UserServiceTest {
     private UserService userService;
 
     @Test
+    public void addAmountTest() {
+
+        UserDO userDO = new UserDO();
+        userDO.setId(1L);
+        userDO.setAmount(1L);
+        int updateCount = userService.addAmount(userDO);
+        System.out.println("updateCount=" + updateCount);
+
+
+    }
+
+    @Test
     public void minusAmountTest() {
 
         UserDO userDO = new UserDO();
