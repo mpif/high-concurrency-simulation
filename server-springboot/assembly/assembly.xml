@@ -1,0 +1,43 @@
+<assembly>
+  <id>assembly</id>
+ 	<formats>
+		<format>zip</format>
+		<format>dir</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory> <!-- zip包里直接就是bin等子目录，不包括artifactId这层目录 -->
+	<fileSets>
+		<!--<fileSet>-->
+			<!--<directory>${project.build.directory}/server-springboot-resources</directory>-->
+			<!--<outputDirectory>conf</outputDirectory>-->
+			<!--<fileMode>0644</fileMode>-->
+		<!--</fileSet>-->
+		<fileSet>
+			<directory>${project.build.directory}/server-springboot-scripts</directory>
+			<outputDirectory>scripts</outputDirectory>
+			<fileMode>0644</fileMode>
+		</fileSet>
+
+		<fileSet>
+			<directory>bin</directory>  <!-- 将src/main/bin目录下的文件打包到根目录(/bin)下. -->
+			<outputDirectory>/bin</outputDirectory>
+			<fileMode>0755</fileMode>
+		</fileSet>
+
+		<fileSet>
+			<directory>${project.build.directory}</directory>
+			<outputDirectory>/lib</outputDirectory>
+			<includes>
+				<include>concurrency-springboot.jar</include>
+			</includes>
+			<fileMode>0755</fileMode>
+		</fileSet>
+
+	</fileSets>
+	<!--<dependencySets>-->
+		<!--<dependencySet>-->
+			<!--<useProjectArtifact>true</useProjectArtifact> &lt;!&ndash; 当前项目构件是否包含在这个依赖集合里 &ndash;&gt;-->
+			<!--<outputDirectory>lib</outputDirectory>&lt;!&ndash; 将scope为runtime的依赖包打包到lib目录下。 &ndash;&gt;-->
+			<!--<scope>runtime</scope>-->
+		<!--</dependencySet>-->
+	<!--</dependencySets>-->
+</assembly>
