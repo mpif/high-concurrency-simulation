@@ -24,7 +24,7 @@
         <springboot.version>2.1.7.RELEASE</springboot.version>
         <fasterxml.jackson>2.9.7</fasterxml.jackson>
         <mysql.version>5.1.25</mysql.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
     </properties>
 
     <dependencyManagement>
