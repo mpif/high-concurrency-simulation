@@ -1,12 +1,9 @@
 package com.codefans.concurrency.clientjava;
 
 import com.codefans.concurrency.clientcommon.HttpAsynClientRequest;
-import com.codefans.concurrency.clientcommon.ServerTask;
 import com.codefans.concurrency.clientcommon.constant.CommonContants;
 import com.codefans.concurrency.clientcommon.util.PropertyUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 

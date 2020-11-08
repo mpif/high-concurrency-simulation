@@ -5,3 +5,5 @@ target
 .project
 *.iml
 ${argus.datadir}
+.gradle/
+build/
